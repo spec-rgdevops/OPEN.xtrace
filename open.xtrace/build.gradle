@@ -1,0 +1,84 @@
+plugins { id "net.saliman.cobertura" version "2.2.8" }
+
+
+def files = subprojects.collect { new File(it.projectDir, '/build/cobertura/cobertura.ser') }
+cobertura {
+    coverageFormats = ['xml']
+    coverageMergeDatafiles = files
+}
+
+
+allprojects{
+	apply plugin: 'java'
+	apply plugin: 'maven'
+	apply plugin: 'eclipse'
+	apply plugin: 'checkstyle'
+	apply plugin: 'findbugs'
+	apply plugin: 'cobertura'
+	repositories { mavenCentral() }
+}
+
+subprojects {
+
+	sourceCompatibility = 1.8
+
+	dependencies {
+		testCompile 'junit:junit:4.8.2'
+		testCompile 'net.sourceforge.cobertura:cobertura:2.1.1'
+	}
+
+	version = '0.2.0-SNAPSHOT'
+	group = 'org.spec.research.open.xtrace'
+
+	jar { manifest.attributes 'Version': version }
+
+	checkstyle {
+		ignoreFailures = false
+		configFile = new File("${projectDir}/../config/checkstyle/open.xtrace-checkstyle.xml")
+		sourceSets = [sourceSets.main]
+	}
+
+	findbugs {
+		ignoreFailures = false
+		excludeFilter = new File("${projectDir}/../config/findbugs/findBugsExcludeFilter.xml")
+		includeFilter = new File("${projectDir}/../config/findbugs/findBugsIncludeFilter.xml")
+	}
+
+	cobertura {
+		coverageIgnoreTrivial = true
+	}
+
+	def nexusSnapshotUrl = project.hasProperty('nexusSnapshotUrl') ? project['nexusSnapshotUrl'] : System.getenv('nexusSnapshotUrl')
+	def nexusReleaseUrl = project.hasProperty('nexusReleaseUrl') ? project['nexusReleaseUrl'] : System.getenv('nexusReleaseUrl')
+	def nexusUsername = project.hasProperty('nexusUsername') ? project['nexusUsername'] : System.getenv('nexusUsername')
+	def nexusPassword = project.hasProperty('nexusPassword') ? project['nexusPassword'] : System.getenv('nexusPassword')
+
+	uploadArchives {
+		repositories {
+			mavenDeployer {
+				repository(url: "${nexusReleaseUrl}") {
+					authentication(userName: "${nexusUsername}", password: "${nexusPassword}")
+				}
+				snapshotRepository(url: "${nexusSnapshotUrl}") {
+					authentication(userName: "${nexusUsername}", password: "${nexusPassword}")
+				}
+				pom.version = "${project.version}"
+				pom.artifactId = "${project.name}"
+				pom.groupId = "${project.group}"
+			}
+		}
+	}
+
+	task checkProperties << {
+		if (!nexusUsername || !nexusPassword || !nexusReleaseUrl  || !nexusSnapshotUrl ) {
+			throw new IllegalArgumentException("Cannot perform uploadArchives task due to missing repository settings!\n" +
+			"Please specify the following properties: nexusReleaseUrl, nexusSnapshotUrl, nexusUsername, nexusPassword");
+		}
+	}
+
+	uploadArchives.dependsOn checkProperties
+	parent.test.dependsOn test
+}
+
+
+task wrapper(type: Wrapper) { gradleVersion = '2.4' }
