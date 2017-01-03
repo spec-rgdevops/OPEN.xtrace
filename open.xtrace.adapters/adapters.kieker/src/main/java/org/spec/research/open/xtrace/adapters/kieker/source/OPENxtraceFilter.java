@@ -72,8 +72,6 @@ public final class OPENxtraceFilter extends AbstractFilterPlugin {
 		return configuration;
 	}
 
-	// private static int runs = 1;
-
 	/**
 	 * This method converts Kieker's trace object into 'OPEN.xtraces'.
 	 * 
@@ -82,13 +80,9 @@ public final class OPENxtraceFilter extends AbstractFilterPlugin {
 	 */
 	@InputPort(name = INPUT_PORT_NAME_EVENTS, description = "Receives incoming objects to be logged and forwarded", eventTypes = { Object.class })
 	public final void inputEvent(final Object object) {
-		System.out.println("Input");
 		if (this.active) {
 			if (object instanceof MessageTrace) {
 				MessageTrace messageTrace = (MessageTrace) object;
-				// if (messageTrace.getSequenceAsVector().size() < 5)
-				// return;
-				// if (runs-- > 0) {
 				TraceImpl trace = TraceImpl.createCallableTrace(messageTrace);
 				try {
 					traceQueue.put(trace);
@@ -96,25 +90,6 @@ public final class OPENxtraceFilter extends AbstractFilterPlugin {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				// System.out.println("- Kieker-Message-Trace:\n"
-				// + messageTrace);
-				// System.out.println("- CTA-TraceImpl:\n" + trace);
-				// System.out
-				// .println("- Starting Dominic's conversion from CTA to Kieker");
-				// MessageTrace dominicsMessageTrace = TraceImpl
-				// .createMessageTrace(trace);
-				// System.out
-				// .println("- Finished Dominic's conversion from CTA to Kieker");
-				// System.out.println("- Dominic's Kieker-MessageTrace:\n"
-				// + dominicsMessageTrace);
-				// Trace lastTrace = TraceImpl
-				// .createCallableTrace(dominicsMessageTrace);
-				// System.out
-				// .println("- CTA-TraceImpl out of Dominic's Kieker-MessageTrace:\n"
-				// + lastTrace);
-				// } else {
-				// System.exit(0);
-				// }
 			}
 		}
 		super.deliver(OUTPUT_PORT_NAME_RELAYED_EVENTS, object);

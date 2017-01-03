@@ -26,7 +26,7 @@ import org.spec.research.open.xtrace.api.core.Trace;
  */
 public class TraceConversion {
 	// list of folders containing traces - for testing
-	private static final String folderPath_KiekerLogs = "F:/Studium/Semester_6_SS_2016/Fachstudie/KiekerLogs/KiekerLogs";
+	private static final String folderPath_KiekerLogs = "F:/KiekerLogs";
 	private static final String[] trace_folders = { 
 		//	folderPath_KiekerLogs + "/kieker-20150730-135300977-UTC-lb.rssreader.rssperf.emulab.net-KIEKER", // Keine Methoden und Klassen in der .map
 		//	folderPath_KiekerLogs + "/kieker-20150730-135301325-UTC-rssserver.rssreader.rssperf.emulab.net-KIEKER", // Keine Methoden und Klassen in der .map
@@ -39,8 +39,8 @@ public class TraceConversion {
 		//	folderPath_KiekerLogs + "/kieker-20150730-135316914-UTC-middletier2.rssreader.rssperf.emulab.net-KIEKER",
 		//	folderPath_KiekerLogs + "/kieker-20150730-135316975-UTC-middletier3.rssreader.rssperf.emulab.net-KIEKER",
 		//	folderPath_KiekerLogs + "/kieker-20150730-135327483-UTC-eureka.rssreader.rssperf.emulab.net-KIEKER",
-		//folderPath_KiekerLogs + "/kieker-20161202-181144967-UTC-Manuel-PC-KIEKER-SINGLETON-Thread-1"
-			folderPath_KiekerLogs + "/kieker-20161202-171200365-UTC-Manuel-PC-KIEKER"	
+		//folderPath_KiekerLogs + "/kieker-20161202-181144967-UTC-KIEKER-SINGLETON-Thread-1"
+			folderPath_KiekerLogs + "/kieker-20161202-171200365-UTC-KIEKER"	
 	};
 
 	// for testing
@@ -83,16 +83,12 @@ public class TraceConversion {
 		final Configuration bareSessionReconstructionFilterConfiguration = new Configuration();
 		bareSessionReconstructionFilterConfiguration.setProperty(SessionReconstructionFilter.CONFIG_PROPERTY_NAME_MAX_THINK_TIME,
 				SessionReconstructionFilter.CONFIG_PROPERTY_VALUE_MAX_THINK_TIME);
-
-		System.out.println("Start OPENxtraceFilter");
 		
 		// use OPENxtraceFilter to reconstruct trace into 'OPEN.xtrace'
 		final OPENxtraceFilter filter = new OPENxtraceFilter(new Configuration(), analysisController);
 		filter.setTraceQueue(traceList);
 		analysisController.connect(traceReconstructionFilter, TraceReconstructionFilter.OUTPUT_PORT_NAME_MESSAGE_TRACE, filter,
 				OPENxtraceFilter.INPUT_PORT_NAME_EVENTS);
-		
-		System.out.println("End OPENxtraceFilter");
 
 		analysisController.run();
 	}
