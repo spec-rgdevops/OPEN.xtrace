@@ -1,0 +1,6 @@
+dependencies {    
+    compile project(':shared') 
+    compile 'org.spec.research:open.xtrace.default.impl:0.2.0'
+
+    compile 'sax:sax:2.0.1'
+}

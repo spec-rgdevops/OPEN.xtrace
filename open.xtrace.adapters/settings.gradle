@@ -1,0 +1,6 @@
+include "shared"
+include "adapters.kieker"
+include "adapters.inspectit"
+include "adapters.introscope"
+include "adapters.dynatrace"
+include "adapters.appdynamics"

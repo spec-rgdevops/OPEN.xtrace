@@ -1,0 +1,103 @@
+configurations.all {
+    // check for updates every build
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+allprojects{
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+	apply plugin: 'maven'
+}
+
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+	apply plugin: 'maven'
+	apply plugin: 'osgi'
+
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
+
+	version = '0.2.0-SNAPSHOT'
+	group = 'open.xtrace.adapters'
+
+
+	jar {
+		manifest {
+			// the manifest of the default jar is of type OsgiManifest
+			instruction 'Bundle-Vendor', 'NovaTec Consulting GmbH'
+			//			instruction 'Bundle-Name', "${project.name}"
+			//			instruction 'Bundle-SymbolicName', "${project.group}.${project.name}"
+			//			instruction 'Bundle-Version', "${project.version}"
+			//			instruction 'Bundle-DocURL', 'http://www.mycompany.com'
+		}
+	}
+	//
+	//	jar {
+	//		manifest {
+	//			attributes 'Implementation-Title': 'OPEN.xtrace adapters',
+	//			'Implementation-Version': version,
+	//			'Version': version
+	//		}
+	//	}
+
+	repositories {
+		mavenCentral()
+
+		maven {
+			name 'NEXUS-NT'
+			url 'http://repository.novatec-gmbh.de/content/repositories/3rd_party_libs/'
+		}
+
+		maven {
+			name 'diagnoseIT Nexus'
+			url 'http://repository.novatec-gmbh.de/content/repositories/diagnoseIT/'
+		}
+
+		maven {
+			name 'SpringSource - External Bundle Releases'
+			url 'http://repository.springsource.com/maven/bundles/external/'
+		}
+
+		maven {
+			name 'SpringSource - SpringSource Bundle Releases'
+			url 'http://repository.springsource.com/maven/bundles/release/'
+		}
+	}
+
+	dependencies {
+		compile group: 'org.spec.research', name: 'open.xtrace.api', version: '0.2.0', changing: true
+
+		testCompile group: 'junit', name: 'junit', version: '4.+'
+	}
+
+	def nexusSnapshotUrl = project.hasProperty('nexusSnapshotUrl') ? project['nexusSnapshotUrl'] : System.getenv('nexusSnapshotUrl')
+	def nexusReleaseUrl = project.hasProperty('nexusReleaseUrl') ? project['nexusReleaseUrl'] : System.getenv('nexusReleaseUrl')
+	def nexusUsername = project.hasProperty('nexusUsername') ? project['nexusUsername'] : System.getenv('nexusUsername')
+	def nexusPassword = project.hasProperty('nexusPassword') ? project['nexusPassword'] : System.getenv('nexusPassword')
+
+	uploadArchives {
+		repositories {
+			mavenDeployer {
+				repository(url: "${nexusReleaseUrl}") {
+					authentication(userName: "${nexusUsername}", password: "${nexusPassword}")
+				}
+				snapshotRepository(url: "${nexusSnapshotUrl}") {
+					authentication(userName: "${nexusUsername}", password: "${nexusPassword}")
+				}
+				pom.version = "${project.version}"
+				pom.artifactId = "${project.name}"
+				pom.groupId = "${project.group}"
+			}
+		}
+	}
+
+	task checkProperties << {
+		if (!nexusUsername || !nexusPassword || !nexusReleaseUrl  || !nexusSnapshotUrl ) {
+			throw new IllegalArgumentException("Cannot perform uploadArchives task due to missing repository settings!\n" +
+			"Please specify the following properties: nexusReleaseUrl, nexusSnapshotUrl, nexusUsername, nexusPassword");
+		}
+	}
+
+	uploadArchives.dependsOn checkProperties
+}
