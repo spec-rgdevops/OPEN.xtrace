@@ -9,9 +9,12 @@ import org.spec.research.open.xtrace.api.core.callables.Callable;
 import org.spec.research.open.xtrace.api.core.callables.NestingCallable;
 import org.spec.research.open.xtrace.api.utils.CallableIterator;
 
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 
 public class IITAbstractNestingCallable extends IITAbstractTimedCallable implements NestingCallable {
+	
+	/** Serial version id. */
+	private static final long serialVersionUID = -5881753880225309401L;
 	private List<Callable> children = null;
 
 	public IITAbstractNestingCallable(InvocationSequenceData isData, IITSubTraceImpl containingTrace, IITAbstractNestingCallable parent) {
@@ -29,7 +32,7 @@ public class IITAbstractNestingCallable extends IITAbstractTimedCallable impleme
 			if (isData.getNestedSequences().isEmpty()) {
 				children = Collections.emptyList();
 			} else {
-				children = new ArrayList(isData.getNestedSequences().size());
+				children = new ArrayList<Callable>(isData.getNestedSequences().size());
 				for (InvocationSequenceData isd : isData.getNestedSequences()) {
 					IITAbstractCallable child = IITTraceImpl.createCallable(isd, containingTrace, this);
 					children.add(child);
@@ -49,7 +52,7 @@ public class IITAbstractNestingCallable extends IITAbstractTimedCallable impleme
 		for (Callable callable : getCallees()) {
 			if (type.isAssignableFrom(callable.getClass())) {
 				if (result == null) {
-					result = new ArrayList();
+					result = new ArrayList<T>();
 				}
 				result.add((T) callable);
 			}

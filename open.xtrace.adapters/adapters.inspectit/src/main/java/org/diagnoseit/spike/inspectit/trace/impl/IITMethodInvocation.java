@@ -11,12 +11,15 @@ import org.spec.research.open.xtrace.api.core.Trace;
 import org.spec.research.open.xtrace.api.core.callables.MethodInvocation;
 import org.spec.research.open.xtrace.api.utils.StringUtils;
 
-import info.novatec.inspectit.cmr.model.MethodIdent;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.ParameterContentData;
-import info.novatec.inspectit.communication.data.TimerData;
+import rocks.inspectit.shared.all.cmr.model.MethodIdent;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.ParameterContentData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
 
 public class IITMethodInvocation extends IITAbstractNestingCallable implements MethodInvocation {
+	
+	/** Serial version id. */
+	private static final long serialVersionUID = -1927896596577582065L;
 	private static final String CONSTRUCTOR_SUFFIX = "<init>";
 	private MethodIdent methodIdentifier = null;
 	private String signature;

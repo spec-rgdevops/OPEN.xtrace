@@ -13,10 +13,9 @@ import org.spec.research.open.xtrace.api.core.Identifiable;
  */
 public abstract class IITAbstractIdentifiableImpl implements Identifiable, Serializable {
 
-	/**
-	 * 
-	 */
+	/** Serial version id. */
 	private static final long serialVersionUID = 5844714352437823529L;
+	
 	/**
 	 * The identifier.
 	 */

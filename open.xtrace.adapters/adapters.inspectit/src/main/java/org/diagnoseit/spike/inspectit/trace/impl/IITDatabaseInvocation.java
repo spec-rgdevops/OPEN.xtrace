@@ -9,10 +9,13 @@ import java.util.Optional;
 import org.spec.research.open.xtrace.api.core.callables.DatabaseInvocation;
 import org.spec.research.open.xtrace.api.utils.StringUtils;
 
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 
 public class IITDatabaseInvocation extends IITAbstractTimedCallable implements DatabaseInvocation {
+	
+	/** Serial version id. */
+	private static final long serialVersionUID = 2816048692421267237L;
 	private SqlStatementData sqlData;
 
 	public IITDatabaseInvocation(InvocationSequenceData isData, IITSubTraceImpl containingTrace, IITAbstractNestingCallable parent) {

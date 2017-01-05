@@ -8,12 +8,12 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.storage.serializer.SerializationException;
-import info.novatec.inspectit.storage.serializer.impl.SerializationManager;
-import info.novatec.inspectit.storage.serializer.schema.ClassSchemaManager;
-import info.novatec.inspectit.util.KryoNetNetwork;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.serializer.SerializationException;
+import rocks.inspectit.shared.all.serializer.impl.SerializationManager;
+import rocks.inspectit.shared.all.serializer.schema.ClassSchemaManager;
+import rocks.inspectit.shared.all.util.KryoNetNetwork;
 
 import com.esotericsoftware.kryo.io.Input;
 

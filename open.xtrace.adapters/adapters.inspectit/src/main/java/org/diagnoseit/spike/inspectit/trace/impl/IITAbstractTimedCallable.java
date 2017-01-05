@@ -4,9 +4,12 @@ import org.spec.research.open.xtrace.api.core.Trace;
 import org.spec.research.open.xtrace.api.core.callables.NestingCallable;
 import org.spec.research.open.xtrace.api.core.callables.TimedCallable;
 
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 
 public class IITAbstractTimedCallable extends IITAbstractCallable implements TimedCallable {
+
+	/** Serial version id. */
+	private static final long serialVersionUID = 7076154836629316056L;
 
 	public IITAbstractTimedCallable(InvocationSequenceData isData, IITSubTraceImpl containingTrace, IITAbstractNestingCallable parent) {
 		super(isData, containingTrace, parent);

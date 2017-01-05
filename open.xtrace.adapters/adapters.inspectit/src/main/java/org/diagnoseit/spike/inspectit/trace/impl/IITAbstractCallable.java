@@ -9,10 +9,13 @@ import org.spec.research.open.xtrace.api.core.SubTrace;
 import org.spec.research.open.xtrace.api.core.callables.Callable;
 import org.spec.research.open.xtrace.api.core.callables.NestingCallable;
 
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 
 public class IITAbstractCallable extends IITAbstractIdentifiableImpl implements Callable {
 
+	/** Serial version id. */
+	private static final long serialVersionUID = -7053659087635453623L;
+	
 	protected final InvocationSequenceData isData;
 	protected IITAbstractNestingCallable parent = null;
 	protected final IITSubTraceImpl containingTrace;

@@ -8,10 +8,13 @@ import org.spec.research.open.xtrace.api.core.callables.HTTPMethod;
 import org.spec.research.open.xtrace.api.core.callables.HTTPRequestProcessing;
 import org.spec.research.open.xtrace.api.utils.StringUtils;
 
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 
 public class IITHTTPRequestProcessing extends IITAbstractNestingCallable implements HTTPRequestProcessing {
+	
+	/** Serial version id. */
+	private static final long serialVersionUID = 6077981592141469965L;
 	private HttpTimerData httpData;
 
 	public IITHTTPRequestProcessing(InvocationSequenceData isData, IITSubTraceImpl containingTrace, IITAbstractNestingCallable parent) {

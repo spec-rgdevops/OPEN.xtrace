@@ -10,8 +10,8 @@ import org.diagnoseit.spike.shared.TraceSink;
 import org.diagnoseit.spike.shared.TraceSource;
 import org.spec.research.open.xtrace.api.core.Trace;
 
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 
 public class InvocationSequenceFileImporter implements TraceSource {
 	private static final String DATA_PATH = "inspectit.fileimporter.datapath";

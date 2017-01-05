@@ -8,12 +8,15 @@ import org.spec.research.open.xtrace.api.utils.CallableIteratorOnTrace;
 import org.spec.research.open.xtrace.api.utils.StringUtils;
 import org.spec.research.open.xtrace.api.utils.SubTraceIterator;
 
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.cmr.service.ICachedDataService;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
+import rocks.inspectit.shared.all.communication.data.HttpTimerData;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 
 public class IITTraceImpl extends IITAbstractIdentifiableImpl implements Trace {
+
+	/** Serial version id. */
+	private static final long serialVersionUID = 2768574993119101303L;
 
 	protected static IITAbstractCallable createCallable(InvocationSequenceData isData, IITSubTraceImpl containingTrace, IITAbstractNestingCallable parent) {
 		if (isData.getSqlStatementData() != null) {

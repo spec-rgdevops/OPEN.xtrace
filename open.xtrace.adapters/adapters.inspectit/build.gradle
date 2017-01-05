@@ -53,9 +53,10 @@ dependencies {
 	compile 'org.ow2.asm:info.novatec.asm:4.0'
 	compile 'org.objenesis:objenesis:2.1'
 	compile 'com.google.guava:guava-jdk5:13.0'
-	compile files('libs/inspectit-commons.jar')
-	compile files('libs/inspectit-commonscs.jar')
-	compile files('libs/info.novatec.inspectit.rcp_1.5.0.jar')
+	// compile files('libs/inspectit-commons.jar')
+	// compile files('libs/inspectit-commonscs.jar')
+	// compile files('libs/info.novatec.inspectit.rcp_1.5.0.jar')
+	compile files('libs/inspectit.shared.all_1.7.5.88.jar')
 	
 	compile project(':shared') 
 }

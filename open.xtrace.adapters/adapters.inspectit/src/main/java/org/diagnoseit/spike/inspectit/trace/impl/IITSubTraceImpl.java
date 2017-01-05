@@ -12,12 +12,13 @@ import org.spec.research.open.xtrace.api.core.callables.Callable;
 import org.spec.research.open.xtrace.api.utils.CallableIterator;
 import org.spec.research.open.xtrace.api.utils.StringUtils;
 
-import info.novatec.inspectit.cmr.model.PlatformIdent;
-import info.novatec.inspectit.communication.data.HttpTimerData;
-import info.novatec.inspectit.communication.data.InvocationSequenceData;
-import info.novatec.inspectit.communication.data.InvocationSequenceDataHelper;
+import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
+import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 
 public class IITSubTraceImpl extends IITAbstractIdentifiableImpl implements SubTrace, Location {
+
+	/** Serial version id. */
+	private static final long serialVersionUID = -8069154836545294257L;
 
 	public static final String UNKNOWN = "UNKNOWN";
 
