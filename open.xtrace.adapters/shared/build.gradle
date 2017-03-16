@@ -1,4 +1,4 @@
 
 dependencies { 
-
+	compile group: 'org.spec.research', name: 'open.xtrace.api', version: '0.2.0', changing: true
 }

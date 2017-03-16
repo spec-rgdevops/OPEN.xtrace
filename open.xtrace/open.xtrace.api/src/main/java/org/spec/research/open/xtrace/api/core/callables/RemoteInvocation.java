@@ -3,6 +3,7 @@ package org.spec.research.open.xtrace.api.core.callables;
 import java.util.Optional;
 
 import org.spec.research.open.xtrace.api.core.Location;
+import org.spec.research.open.xtrace.api.core.MobileRemoteMeasurement;
 import org.spec.research.open.xtrace.api.core.SubTrace;
 
 /**
@@ -34,4 +35,20 @@ public interface RemoteInvocation extends TimedCallable {
      * @return String representation of the target this call goes to
      */
     String getTarget();
+    
+    /**
+     * Returns the {@link MobileRemoteMeasurement} information of the request measurement.
+     *
+     * @return an {@link Optional} with the request measurement of the remote call as value. If a corresponding {@link MobileRemoteMeasurement}
+     * instance does not exist, this method returns an empty {@link Optional}.
+     */
+    Optional<MobileRemoteMeasurement> getRequestMeasurement();
+    
+    /**
+     * Returns the {@link MobileRemoteMeasurement} information of the response measurement.
+     *
+     * @return an {@link Optional} with the response measurement of the remote call as value. If a corresponding {@link MobileRemoteMeasurement}
+     * instance does not exist, this method returns an empty {@link Optional}.
+     */
+    Optional<MobileRemoteMeasurement> getResponseMeasurement();
 }

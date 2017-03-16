@@ -4,10 +4,13 @@ import java.io.Serializable;
 import java.util.Optional;
 
 import org.spec.research.open.xtrace.api.core.Location;
+import org.spec.research.open.xtrace.api.core.MobileRemoteMeasurement;
 import org.spec.research.open.xtrace.api.core.SubTrace;
 import org.spec.research.open.xtrace.api.core.callables.Callable;
+import org.spec.research.open.xtrace.api.core.callables.MobileMetadataMeasurement;
 import org.spec.research.open.xtrace.api.core.callables.RemoteInvocation;
 import org.spec.research.open.xtrace.api.utils.StringUtils;
+import org.spec.research.open.xtrace.dflt.impl.core.MobileRemoteMeasurementImpl;
 import org.spec.research.open.xtrace.dflt.impl.core.SubTraceImpl;
 
 /**
@@ -18,9 +21,7 @@ import org.spec.research.open.xtrace.dflt.impl.core.SubTraceImpl;
  */
 public class RemoteInvocationImpl extends AbstractTimedCallableImpl implements RemoteInvocation, Serializable {
 
-	/**
-	 * 
-	 */
+	/** Serial version id. */
 	private static final long serialVersionUID = 5976896106312375101L;
 
 	/**
@@ -32,6 +33,16 @@ public class RemoteInvocationImpl extends AbstractTimedCallableImpl implements R
 	 * String representation of the target.
 	 */
 	private String target;
+	
+	/**
+	 * Measurement at the beginning of a remote call.
+	 */
+	private MobileRemoteMeasurementImpl requestMeasurement;
+	
+	/**
+	 * Measurement at the ending of a remote call.
+	 */
+	private MobileRemoteMeasurementImpl responseMeasurement;
 
 	/**
 	 * Default constructor for serialization. This constructor should not be used except for
@@ -58,22 +69,8 @@ public class RemoteInvocationImpl extends AbstractTimedCallableImpl implements R
 		return Optional.ofNullable(targetSubTrace);
 	}
 
-	/**
-	 * Sets the target SubTrace.
-	 * 
-	 * @param targetSubTrace
-	 *            {@link SubTraceImpl} instance to set.
-	 */
-	public void setTargetSubTrace(SubTraceImpl targetSubTrace) {
-		this.targetSubTrace = targetSubTrace;
-	}
-
 	@Override
 	public Optional<Location> getTargetLocation() {
-//		if (targetSubTrace != null) {
-//			return targetSubTrace.getLocation();
-//		}
-//		return null;
 		return Optional.ofNullable(targetSubTrace.getLocation());
 	}
 
@@ -84,13 +81,53 @@ public class RemoteInvocationImpl extends AbstractTimedCallableImpl implements R
 		}
 		return target;
 	}
+	
+	@Override
+	public Optional<MobileRemoteMeasurement> getRequestMeasurement() {
+		return Optional.ofNullable(requestMeasurement);
+	}
+
+	@Override
+	public Optional<MobileRemoteMeasurement> getResponseMeasurement() {
+		return Optional.ofNullable(responseMeasurement);
+	}
 
 	/**
+	 * Set the measurement at the ending of this remote call.
+	 * 
+	 * @param responseMeasurement
+	 */
+	public void setResponseMeasurement(MobileRemoteMeasurementImpl responseMeasurement) {
+		this.responseMeasurement = responseMeasurement;
+	}
+	
+	/**
+	 * Set the measurement at the beginning of this remote call.
+	 * 
+	 * @param responseMeasurement
+	 */
+	public void setRequestMeasurement(MobileRemoteMeasurementImpl requestMeasurement) {
+		this.requestMeasurement = requestMeasurement;
+	}
+
+	/**
+	 * Set the target of this remote call.
+	 * 
 	 * @param target
 	 *            the target to set
 	 */
 	public void setTarget(String target) {
 		this.target = target;
+	}
+	
+	/**
+	 * Sets the target SubTrace.
+	 * 
+	 * @param targetSubTrace
+	 *            {@link SubTraceImpl} instance to set.
+	 */
+	public void setTargetSubTrace(SubTraceImpl targetSubTrace) {
+		this.targetSubTrace = targetSubTrace;
 	}
 	
 	@Override
