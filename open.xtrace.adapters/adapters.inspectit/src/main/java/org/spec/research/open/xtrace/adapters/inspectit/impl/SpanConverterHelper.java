@@ -12,73 +12,34 @@ import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.MobilePeriodicMeasurement;
 import rocks.inspectit.shared.all.tracing.data.Span;
+import rocks.inspectit.shared.all.tracing.data.SpanIdent;
 
 class SpanConverterHelper {
 	
 	private static final String REQUEST = "http.request.";
 	private static final String RESPONSE = "http.response.";
 	private static final String URL = "http.url";
+	private static final String OPERATIONNAME = "ext.operation.name";
 	
 	protected IITAbstractCallable createCallable(IITSubTraceImpl containingTrace, IITAbstractNestingCallable parent, IITTraceImpl trace, MobileTraceData traceData) {
 		
-		List<Span> spans = traceData.getSpans();
-
-		// TraceID is equal usecaseID
-		long traceID = spans.get(0).getSpanIdent().getTraceId();
+		Span rootSpan = getRootSpan(traceData.getSpans());
+		if(rootSpan == null){
+			throw new IllegalArgumentException("No root span found!");
+		}
 		
-		// Operationname is equal UsecaseDescription
-		String operationName = "OperationName";
+		// TraceID is equal usecaseID
+		long traceID = rootSpan.getSpanIdent().getTraceId();
+
+		String operationName = rootSpan.getTags().get(OPERATIONNAME);
 		
 		InvocationSequenceData data = new InvocationSequenceData();
-		data.setTimeStamp(spans.get(0).getTimeStamp());
-		data.setDuration(spans.get(0).getDuration());
+		data.setTimeStamp(rootSpan.getTimeStamp());
+		data.setDuration(rootSpan.getDuration());
 		IITMobileMetaMeasurementCallable rootCallable = new IITMobileMetaMeasurementCallable(containingTrace, parent, traceID, operationName, null, data);
 		
-		System.out.println("Root: " + spans.get(0));
+		addChildren(trace, traceData, containingTrace, rootCallable, rootSpan, traceData.getMeasurements());
 		
-		
-		addChildren(trace, traceData, containingTrace, rootCallable, spans.get(0), traceData.getMeasurements());
-		
-
-		
-		/*
-		if(mobileUsecase.getMeasurements() != null){
-			for (MobilePeriodicMeasurement measurement : mobileUsecase.getMeasurements()) {
-				IITAbstractCallable callable = new IITMobileMetaMeasurementCallable(containingTrace, parent, child.getTags());
-				rootCallable.addChild(callable);
-			}
-		}
-		*/
-		/*
-		if(mobileUsecase.getRemoteCalls() != null){
-			for (RemoteCallMeasurementContainer remoteCallContainer : mobileUsecase.getRemoteCalls()) {
-				
-				RemoteCallMeasurement remoteCallMeasurement = null;
-				if(remoteCallContainer.getRequestMeasurement() == null){
-					if(remoteCallContainer.getResponseMeasurement() != null){
-						remoteCallMeasurement = remoteCallContainer.getResponseMeasurement();
-					}
-				} else {
-					remoteCallMeasurement = remoteCallContainer.getRequestMeasurement();
-				}
-				if(remoteCallMeasurement == null){
-					continue;
-				}
-				
-				InvocationSequenceData sequenceData = trace.getInvocationSequenceDataWithSpanID(remoteCallMeasurement.getRemoteCallID());
-				
-				if(sequenceData == null){
-					continue;
-				}
-				
-				IITRemoteInvocation remoteInvocation = new IITRemoteInvocation(sequenceData, containingTrace, parent);
-				remoteInvocation.setTargetSubTrace(new IITSubTraceImpl(trace, sequenceData, trace.getPlatformIdentWithID(sequenceData.getPlatformIdent())));
-				remoteInvocation.setRequestMeasurement(new IITMobileRemoteMeasurement(remoteCallContainer.getRequestMeasurement()));
-				remoteInvocation.setResponseMeasurement(new IITMobileRemoteMeasurement(remoteCallContainer.getResponseMeasurement()));
-				rootCallable.addChild(remoteInvocation);
-			}
-		}
-	*/
 		return rootCallable;
 	}
 	
@@ -86,7 +47,7 @@ class SpanConverterHelper {
 
 		Timestamp startTime = parentSpan.getTimeStamp();
 		if(startTime == null){
-			throw new IllegalArgumentException("Timestamp of span with id " + parentSpan.getSpanIdent().getId() + " is null.");
+			throw new IllegalArgumentException("Timestamp of span with id " + parentSpan.getSpanIdent().getId() + " is null!");
 		}
 		
 		// Get all measurements for complete span (with nesting spans)
@@ -152,7 +113,7 @@ class SpanConverterHelper {
 				InvocationSequenceData data = new InvocationSequenceData();
 				data.setTimeStamp(child.getTimeStamp());
 				data.setDuration(child.getDuration());
-				IITMobileMetaMeasurementCallable usecaseCallable = new IITMobileMetaMeasurementCallable(containingTrace, parent, parent.getUseCaseID().get(), parent.getUseCaseName().get(), null, data);
+				IITMobileMetaMeasurementCallable usecaseCallable = new IITMobileMetaMeasurementCallable(containingTrace, parent, parent.getUseCaseID().get(), parent.getUseCaseName().orElse(""), null, data);
 				parent.addChild(usecaseCallable);
 				
 				addChildren(trace, traceData, containingTrace, usecaseCallable, child, measurements);
@@ -166,6 +127,16 @@ class SpanConverterHelper {
 			IITAbstractNestingCallable childCallable = new IITMobileMetaMeasurementCallable(containingTrace, parent, parent.getUseCaseID().get(), parent.getUseCaseName().get(), periodicMeasurement, data);
 			parent.addChild(childCallable);
 		}
+	}
+	
+	private Span getRootSpan(List<Span> spans){
+		for (Span span : spans) {
+			SpanIdent ident = span.getSpanIdent();
+			if(ident.getId() == ident.getParentId() && ident.getId() == ident.getTraceId()){
+				return span;
+			}
+		}
+		return null;
 	}
 	
 	private List<MobilePeriodicMeasurement> getMeasurementsInInterval(List<MobilePeriodicMeasurement> measurements, long from, long duration){
@@ -213,20 +184,4 @@ class SpanConverterHelper {
 		}
 		return null;
 	}
-	
-	/*
-	private static class MobilePeriodicMeasurementComparator implements Comparator<MobilePeriodicMeasurement> {
-
-		@Override
-		public int compare(MobilePeriodicMeasurement arg0, MobilePeriodicMeasurement arg1) {
-			long dif = arg0.getTimestamp() - arg1.getTimestamp();
-			if (dif > 0){
-				return 1;
-			} else if(dif < 0){
-				return -1;
-			}
-			return 0;
-		}		
-	}
-	*/
 }
