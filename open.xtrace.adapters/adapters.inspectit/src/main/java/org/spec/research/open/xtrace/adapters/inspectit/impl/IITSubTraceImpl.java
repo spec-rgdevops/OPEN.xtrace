@@ -10,6 +10,7 @@ import org.spec.research.open.xtrace.api.core.SubTrace;
 import org.spec.research.open.xtrace.api.core.Trace;
 import org.spec.research.open.xtrace.api.core.TreeIterator;
 import org.spec.research.open.xtrace.api.core.callables.Callable;
+import org.spec.research.open.xtrace.api.core.callables.TimedCallable;
 import org.spec.research.open.xtrace.api.utils.CallableIterator;
 import org.spec.research.open.xtrace.api.utils.StringUtils;
 
@@ -235,6 +236,13 @@ public class IITSubTraceImpl extends IITAbstractIdentifiableImpl implements SubT
 	@Override
 	public long getResponseTime() {
 
+		if(sequenceData == null){
+			if(root instanceof TimedCallable){
+				TimedCallable callable = (TimedCallable) root;
+				return callable.getResponseTime();
+			}
+			return -1;
+		}
 		return Math.round(sequenceData.getDuration() * Trace.MILLIS_TO_NANOS_FACTOR);
 	}
 

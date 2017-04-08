@@ -39,13 +39,6 @@ public class IITTraceImpl extends IITAbstractIdentifiableImpl implements Trace {
 		this.root = new IITSubTraceImpl(this, root);
 	}
 	
-	/**
-	 * Only for this package.
-	 * 
-	 * @param remoteCalls
-	 * @param pIdents
-	 * @param spans
-	 */
 	public IITTraceImpl(MobileTraceData traceData) {		
 		super((traceData.getSpans().get(0).hashCode() * (long)Math.pow(10, String.valueOf(traceData.getSpans().get(0).getDuration()).length() + 1)) + (int)traceData.getSpans().get(0).getDuration());
 		this.root = new IITSubTraceImpl(this, traceData);

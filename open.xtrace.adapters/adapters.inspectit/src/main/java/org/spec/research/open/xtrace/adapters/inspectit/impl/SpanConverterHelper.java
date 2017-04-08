@@ -30,6 +30,7 @@ class SpanConverterHelper {
 		
 		// TraceID is equal usecaseID
 		long traceID = rootSpan.getSpanIdent().getTraceId();
+		containingTrace.getContainingTrace().setIdentifier(traceID);
 
 		String operationName = rootSpan.getTags().get(OPERATIONNAME);
 		
@@ -47,7 +48,7 @@ class SpanConverterHelper {
 
 		Timestamp startTime = parentSpan.getTimeStamp();
 		if(startTime == null){
-			throw new IllegalArgumentException("Timestamp of span with id " + parentSpan.getSpanIdent().getId() + " is null!");
+			throw new IllegalArgumentException(String.format("Timestamp of span with id %s is null!", parentSpan.getSpanIdent().getId()));
 		}
 		
 		// Get all measurements for complete span (with nesting spans)
@@ -63,27 +64,8 @@ class SpanConverterHelper {
 				Map<String, String> requestMeasurement = new HashMap<String, String>();
 				Map<String, String> responseMeasurement = new HashMap<String, String>();
 				
-				for (String key : child.getTags().keySet()) {
-					int lastIndexOfPoint = key.lastIndexOf('.');
-					String value = child.getTags().get(key);
-					
-					if(lastIndexOfPoint == -1){
-						requestMeasurement.put(key, value);
-						responseMeasurement.put(key, value);
-					} else {
-						String prefix = key.substring(0, lastIndexOfPoint);
-						String suffix = key.substring(lastIndexOfPoint);
-						if(prefix.equals(REQUEST)){
-							requestMeasurement.put(suffix, value);				
-						} else if(prefix.equals(RESPONSE)){
-							responseMeasurement.put(suffix, value);				
-						} else {
-							requestMeasurement.put(suffix, value);
-							responseMeasurement.put(suffix, value);	
-						}
-					}
-				}
-
+				this.insertRequestAndResponseMeasurements(child.getTags(), requestMeasurement, responseMeasurement);				
+				
 				Long requestTimestamp = null;
 				Long responseTimestamp = null;
 				if(child.getTimeStamp() != null){
@@ -126,6 +108,29 @@ class SpanConverterHelper {
 			data.setTimeStamp(periodicMeasurement.getTimeStamp());
 			IITAbstractNestingCallable childCallable = new IITMobileMetaMeasurementCallable(containingTrace, parent, parent.getUseCaseID().get(), parent.getUseCaseName().get(), periodicMeasurement, data);
 			parent.addChild(childCallable);
+		}
+	}
+	
+	private void insertRequestAndResponseMeasurements(Map<String, String> tags, Map<String, String> requestMeasurement, Map<String, String> responseMeasurement){
+		for (String key : tags.keySet()) {
+			int lastIndexOfPoint = key.lastIndexOf('.');
+			String value = tags.get(key);
+			
+			if(lastIndexOfPoint == -1){
+				requestMeasurement.put(key, value);
+				responseMeasurement.put(key, value);
+			} else {
+				String prefix = key.substring(0, lastIndexOfPoint);
+				String suffix = key.substring(lastIndexOfPoint + 1);
+				if(prefix.equals(REQUEST)){
+					requestMeasurement.put(suffix, value);				
+				} else if(prefix.equals(RESPONSE)){
+					responseMeasurement.put(suffix, value);				
+				} else {
+					requestMeasurement.put(suffix, value);
+					responseMeasurement.put(suffix, value);	
+				}
+			}
 		}
 	}
 	
