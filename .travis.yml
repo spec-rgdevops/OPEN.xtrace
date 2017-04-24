@@ -1,5 +1,7 @@
+# set language
 language: java
 
+# run gradle
 script:
  - cd open.xtrace
  - ./gradlew build
