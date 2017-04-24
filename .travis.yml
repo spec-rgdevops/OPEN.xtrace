@@ -1,6 +1,10 @@
 # set language
 language: java
 
+# temporary change permissions on gradle wrapper
+before_install:
+ - chmod +x gradlew
+
 # run gradle
 script:
  - cd open.xtrace
