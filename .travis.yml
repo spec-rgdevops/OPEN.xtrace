@@ -8,5 +8,5 @@ before_install:
 
 # run gradle
 script:
- - cd open.xtrace
+ #- cd open.xtrace
  - ./gradlew build
