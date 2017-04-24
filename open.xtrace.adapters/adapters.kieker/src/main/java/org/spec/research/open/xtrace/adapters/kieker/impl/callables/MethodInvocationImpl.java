@@ -57,7 +57,7 @@ public class MethodInvocationImpl extends AbstractNestingCallableImpl implements
 			this.parameterTypes = new ArrayList<String>();
 		}
 		this.parameterTypes.addAll(Arrays.asList(receivingExecution.getOperation().getSignature().getParamTypeList()));
-		this.parameterValues = Collections.EMPTY_MAP;
+		this.parameterValues = Collections.emptyMap();
 		this.returnType = receivingExecution.getOperation().getSignature().getReturnType();
 	}
 

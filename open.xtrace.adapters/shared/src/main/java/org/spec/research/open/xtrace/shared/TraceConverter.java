@@ -1,22 +1,16 @@
 package org.spec.research.open.xtrace.shared;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Properties;
 
-import org.diagnoseit.spike.shared.TraceSink;
 import org.spec.research.open.xtrace.api.core.Trace;
 
 public interface TraceConverter {
-
 	/**
-	 * Converts traces from the provided file into OPEN.xtrace. traceSink
-	 * contains the converted traces.
-	 * 
-	 * @param filePath
-	 *            - Path to file with traces
-	 * @param traceSink
-	 *            - Container for results
+	 * Initializes the adapter.
+	 * @param properties properties for adapter configuration
 	 */
-	public void convertTraces(final String path, final TraceSink traceSink);
+	void initialize(Properties properties);
 
 	/**
 	 * Converts traces from the provided file into OPEN.xtrace.
@@ -25,6 +19,13 @@ public interface TraceConverter {
 	 *            - Path to file with traces
 	 * @return Converted traces in OPEN.xtrace format.
 	 */
-	public List<Trace> convertTraces(final String path);
+	public Collection<Trace> convertTraces(final String path);
+
+	/**
+	 * Converts one trace. The input format depends on the APM tool that the adapter is for.
+	 * @param trace trace that is going to be converted
+	 * @return OPEN.xtrace representation of the trace
+	 */
+	Trace convertTrace(Object trace);
 
 }

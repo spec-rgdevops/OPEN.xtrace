@@ -9,7 +9,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.diagnoseit.spike.shared.TraceSource;
 import org.spec.research.open.xtrace.adapters.dynatrace.model.generated.Dashboardreport;
 import org.spec.research.open.xtrace.adapters.dynatrace.model.generated.Dashboardreport.Data;
 import org.spec.research.open.xtrace.adapters.dynatrace.model.generated.Purepathsdashlet;

@@ -5,59 +5,25 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-import org.diagnoseit.spike.shared.TraceSink;
-import org.diagnoseit.spike.shared.TraceSource;
 import org.spec.research.open.xtrace.api.core.Trace;
 import org.spec.research.open.xtrace.shared.TraceConverter;
 
-public class IntroscopeTraceConverter implements TraceSource, Runnable, TraceConverter {
+public class IntroscopeTraceConverter implements Runnable, TraceConverter {
 
-	private TraceSink traceSink = null;
 	private static final String DATA_PATHS_KEY = "caintroscope.fileimporter.datapath";
 	private String strDataPath = null;
 
 	@Override
 	public void run() {
 
-		this.convertTraces(strDataPath, traceSink);
+		this.convertTraces(strDataPath);
 	}
 
 	@Override
-	public void initialize(Properties properties, TraceSink traceSink) {
-
-		this.traceSink = traceSink;
-
+	public void initialize(Properties properties) {
 		strDataPath = properties.getProperty(DATA_PATHS_KEY);
 		if (strDataPath == null) {
 			throw new IllegalArgumentException("Data paths have not been specified for the CA Introscope file importer trace source. Key: " + DATA_PATHS_KEY);
-		}
-	}
-
-	@Override
-	public boolean isManualSource() {
-		return false;
-	}
-
-	@Override
-	public Trace submitNextTrace() {
-		throw new UnsupportedOperationException("This operation is only available for manual trace sources!");
-	}
-
-	@Override
-	public void startTraceGeneration() {
-		new Thread(this).start();
-	}
-
-	@Override
-	public void stopTraceGeneration() {
-	}
-
-	@Override
-	public void convertTraces(final String path, final TraceSink traceSink) {
-
-		List<Trace> listConvertedTraces = convertTraces(path);
-		for (Trace trace : listConvertedTraces) {
-			traceSink.appendTrace(trace);
 		}
 	}
 
@@ -76,5 +42,10 @@ public class IntroscopeTraceConverter implements TraceSource, Runnable, TraceCon
 		}
 		
 		return listConvertedTraces;
+	}
+
+	@Override
+	public Trace convertTrace(Object trace) {
+		throw new UnsupportedOperationException();
 	}
 }

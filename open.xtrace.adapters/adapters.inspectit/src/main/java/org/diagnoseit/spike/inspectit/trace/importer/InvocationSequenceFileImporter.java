@@ -13,6 +13,7 @@ import org.spec.research.open.xtrace.api.core.Trace;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 
+// TODO has to be converted to the new API - use TraceConverter, instead the TraceConverter
 public class InvocationSequenceFileImporter implements TraceSource {
 	private static final String DATA_PATH = "inspectit.fileimporter.datapath";
 	private static Iterator<InvocationSequenceData> isDataIterator = null;
@@ -24,7 +25,8 @@ public class InvocationSequenceFileImporter implements TraceSource {
 	public void initialize(Properties properties, TraceSink traceSink) {
 		String dataPath = properties.getProperty(DATA_PATH);
 		if (dataPath == null) {
-			throw new IllegalArgumentException("Data path has not been specified for the inspectIT file importer trace source.");
+			throw new IllegalArgumentException(
+					"Data path has not been specified for the inspectIT file importer trace source.");
 		}
 		this.traceSink = traceSink;
 		try {
@@ -83,5 +85,4 @@ public class InvocationSequenceFileImporter implements TraceSource {
 		throw new UnsupportedOperationException("This operation is NOT available for manual trace sources!");
 
 	}
-
 }

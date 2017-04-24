@@ -35,88 +35,88 @@ public class TraceImpl extends AbstractIdentifiableImpl implements Trace, Serial
 	}
 
 	// commented
-	private void dusanTraceImpl() {
-		// // Dusan
-		// this.traceId = messageTrace.getTraceId();
-		// List<AbstractMessage> messages = new ArrayList<AbstractMessage>();
-		//
-		// messages.addAll(messageTrace.getSequenceAsVector());
-		//
-		// System.out.println("TEST TEST 1 2 3 - start");
-		// for (AbstractMessage message : messages) {
-		// System.out.println(message);
-		// }
-		//
-		// Location lastLocation = null;
-		// SubTrace lastSubTrace = null;
-		// Callable lastCallable = null;
-		// AbstractCallableImpl newCallable = null;
-		// // create first callable which is either method invocation or HTTP
-		// // request
-		// Execution firstReceivingExecution = messages.get(0)
-		// .getReceivingExecution();
-		// newCallable = generateCallable(firstReceivingExecution, null, null);
-		// SubTraceImpl rootSubTrace = new SubTraceImpl(this, newCallable,
-		// messages.get(0));
-		// this.rootSubTrace = rootSubTrace;
-		// newCallable.setContainingSubTrace(this.rootSubTrace);
-		// lastSubTrace = rootSubTrace;
-		// lastCallable = lastSubTrace.getRoot();
-		// ((AbstractNestingCallableImpl) lastCallable)
-		// .setContainingSubTrace((SubTraceImpl) lastSubTrace);
-		// lastLocation = rootSubTrace.getLocation();
-		//
-		// messages.remove(0);
-		// for (AbstractMessage abstractMessage : messages) {
-		// // call message
-		// if (abstractMessage instanceof SynchronousCallMessage) {
-		// // if the location is the same as previous, add callable
-		// Location newLocation = new LocationImpl(
-		// abstractMessage.getReceivingExecution());
-		// if (lastLocation.equals(newLocation)) {
-		// newCallable = generateCallable(
-		// abstractMessage.getReceivingExecution(),
-		// (AbstractNestingCallableImpl) lastCallable,
-		// lastSubTrace);
-		// ((AbstractNestingCallableImpl) lastCallable)
-		// .addCallee(newCallable);
-		// } else { // else add subtrace
-		// // first create remote invocation and add it to previous
-		// // subtrace
-		// ((SubTraceImpl) lastSubTrace).setLastCallable(lastCallable);
-		// SubTraceImpl newSubTrace = new SubTraceImpl(this, null,
-		// lastSubTrace, abstractMessage);
-		// RemoteInvocation ri = new RemoteInvocationImpl(
-		// (AbstractNestingCallableImpl) lastCallable,
-		// abstractMessage.getTimestamp(), null, null,
-		// lastSubTrace, newSubTrace);
-		// ((AbstractNestingCallableImpl) lastCallable).addCallee(ri);
-		// lastSubTrace.getSubTraces().add(newSubTrace);
-		// lastLocation = newLocation;
-		// lastSubTrace = newSubTrace;
-		// newCallable = generateCallable(
-		// abstractMessage.getReceivingExecution(), null,
-		// lastSubTrace);
-		// ((SubTraceImpl) lastSubTrace).setRoot(newCallable);
-		// }
-		// lastCallable = newCallable;
-		// ((AbstractNestingCallableImpl) lastCallable)
-		// .setContainingSubTrace((SubTraceImpl) lastSubTrace);
-		// } else {
-		// // reply message
-		// if (lastCallable.getParent() != null)
-		// lastCallable = lastCallable.getParent();
-		// else if (lastSubTrace.getParent() != null) {
-		// lastSubTrace = lastSubTrace.getParent();
-		// lastCallable = ((SubTraceImpl) lastSubTrace)
-		// .getLastCallable();
-		// }
-		// }
-		// }
-		//
-		// System.out.println(iterator().hasNext());
-		// System.out.println("TEST TEST 1 2 3 - end");
-	}
+	// private void dusanTraceImpl() {
+	// // Dusan
+	// this.traceId = messageTrace.getTraceId();
+	// List<AbstractMessage> messages = new ArrayList<AbstractMessage>();
+	//
+	// messages.addAll(messageTrace.getSequenceAsVector());
+	//
+	// System.out.println("TEST TEST 1 2 3 - start");
+	// for (AbstractMessage message : messages) {
+	// System.out.println(message);
+	// }
+	//
+	// Location lastLocation = null;
+	// SubTrace lastSubTrace = null;
+	// Callable lastCallable = null;
+	// AbstractCallableImpl newCallable = null;
+	// // create first callable which is either method invocation or HTTP
+	// // request
+	// Execution firstReceivingExecution = messages.get(0)
+	// .getReceivingExecution();
+	// newCallable = generateCallable(firstReceivingExecution, null, null);
+	// SubTraceImpl rootSubTrace = new SubTraceImpl(this, newCallable,
+	// messages.get(0));
+	// this.rootSubTrace = rootSubTrace;
+	// newCallable.setContainingSubTrace(this.rootSubTrace);
+	// lastSubTrace = rootSubTrace;
+	// lastCallable = lastSubTrace.getRoot();
+	// ((AbstractNestingCallableImpl) lastCallable)
+	// .setContainingSubTrace((SubTraceImpl) lastSubTrace);
+	// lastLocation = rootSubTrace.getLocation();
+	//
+	// messages.remove(0);
+	// for (AbstractMessage abstractMessage : messages) {
+	// // call message
+	// if (abstractMessage instanceof SynchronousCallMessage) {
+	// // if the location is the same as previous, add callable
+	// Location newLocation = new LocationImpl(
+	// abstractMessage.getReceivingExecution());
+	// if (lastLocation.equals(newLocation)) {
+	// newCallable = generateCallable(
+	// abstractMessage.getReceivingExecution(),
+	// (AbstractNestingCallableImpl) lastCallable,
+	// lastSubTrace);
+	// ((AbstractNestingCallableImpl) lastCallable)
+	// .addCallee(newCallable);
+	// } else { // else add subtrace
+	// // first create remote invocation and add it to previous
+	// // subtrace
+	// ((SubTraceImpl) lastSubTrace).setLastCallable(lastCallable);
+	// SubTraceImpl newSubTrace = new SubTraceImpl(this, null,
+	// lastSubTrace, abstractMessage);
+	// RemoteInvocation ri = new RemoteInvocationImpl(
+	// (AbstractNestingCallableImpl) lastCallable,
+	// abstractMessage.getTimestamp(), null, null,
+	// lastSubTrace, newSubTrace);
+	// ((AbstractNestingCallableImpl) lastCallable).addCallee(ri);
+	// lastSubTrace.getSubTraces().add(newSubTrace);
+	// lastLocation = newLocation;
+	// lastSubTrace = newSubTrace;
+	// newCallable = generateCallable(
+	// abstractMessage.getReceivingExecution(), null,
+	// lastSubTrace);
+	// ((SubTraceImpl) lastSubTrace).setRoot(newCallable);
+	// }
+	// lastCallable = newCallable;
+	// ((AbstractNestingCallableImpl) lastCallable)
+	// .setContainingSubTrace((SubTraceImpl) lastSubTrace);
+	// } else {
+	// // reply message
+	// if (lastCallable.getParent() != null)
+	// lastCallable = lastCallable.getParent();
+	// else if (lastSubTrace.getParent() != null) {
+	// lastSubTrace = lastSubTrace.getParent();
+	// lastCallable = ((SubTraceImpl) lastSubTrace)
+	// .getLastCallable();
+	// }
+	// }
+	// }
+	//
+	// System.out.println(iterator().hasNext());
+	// System.out.println("TEST TEST 1 2 3 - end");
+	// }
 
 	// |===============|
 	// | kieker to CTA |

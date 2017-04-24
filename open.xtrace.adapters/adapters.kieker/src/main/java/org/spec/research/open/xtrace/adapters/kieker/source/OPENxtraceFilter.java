@@ -15,7 +15,10 @@
  ***************************************************************************/
 package org.spec.research.open.xtrace.adapters.kieker.source;
 
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.List;
+
+import org.spec.research.open.xtrace.adapters.kieker.impl.TraceImpl;
+import org.spec.research.open.xtrace.api.core.Trace;
 
 import kieker.analysis.IProjectContext;
 import kieker.analysis.plugin.annotation.InputPort;
@@ -25,9 +28,6 @@ import kieker.analysis.plugin.filter.AbstractFilterPlugin;
 import kieker.common.configuration.Configuration;
 import kieker.tools.traceAnalysis.systemModel.MessageTrace;
 
-import org.spec.research.open.xtrace.adapters.kieker.impl.TraceImpl;
-import org.spec.research.open.xtrace.api.core.Trace;
-
 /**
  * This filter converts traces into 'OPEN.xtraces'.
  * 
@@ -35,7 +35,8 @@ import org.spec.research.open.xtrace.api.core.Trace;
  *
  * @since 1.12
  */
-@Plugin(description = "A filter to print the object to a configured stream", outputPorts = @OutputPort(name = OPENxtraceFilter.OUTPUT_PORT_NAME_RELAYED_EVENTS, description = "Provides each incoming object", eventTypes = { Object.class }), configuration = {})
+@Plugin(description = "A filter to print the object to a configured stream", outputPorts = @OutputPort(name = OPENxtraceFilter.OUTPUT_PORT_NAME_RELAYED_EVENTS, description = "Provides each incoming object", eventTypes = {
+		Object.class }), configuration = {})
 public final class OPENxtraceFilter extends AbstractFilterPlugin {
 
 	/** The name of the input port for incoming events. */
@@ -43,7 +44,7 @@ public final class OPENxtraceFilter extends AbstractFilterPlugin {
 	/** The name of the output port delivering the incoming events. */
 	public static final String OUTPUT_PORT_NAME_RELAYED_EVENTS = "relayedEvents";
 	private boolean active;
-	private LinkedBlockingQueue<Trace> traceQueue;
+	private List<Trace> traces;
 
 	/**
 	 * Creates a new instance of this class using the given parameters.
@@ -78,24 +79,20 @@ public final class OPENxtraceFilter extends AbstractFilterPlugin {
 	 * @param object
 	 *            The new object.
 	 */
-	@InputPort(name = INPUT_PORT_NAME_EVENTS, description = "Receives incoming objects to be logged and forwarded", eventTypes = { Object.class })
+	@InputPort(name = INPUT_PORT_NAME_EVENTS, description = "Receives incoming objects to be logged and forwarded", eventTypes = {
+			Object.class })
 	public final void inputEvent(final Object object) {
 		if (this.active) {
 			if (object instanceof MessageTrace) {
 				MessageTrace messageTrace = (MessageTrace) object;
 				TraceImpl trace = TraceImpl.createCallableTrace(messageTrace);
-				try {
-					traceQueue.put(trace);
-
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				traces.add(trace);
 			}
 		}
 		super.deliver(OUTPUT_PORT_NAME_RELAYED_EVENTS, object);
 	}
 
-	public void setTraceQueue(LinkedBlockingQueue<Trace> traceQueue) {
-		this.traceQueue = traceQueue;
+	public void setTraceQueue(List<Trace> traces) {
+		this.traces = traces;
 	}
 }
