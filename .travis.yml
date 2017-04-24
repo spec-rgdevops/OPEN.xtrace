@@ -7,6 +7,6 @@ before_install:
  - chmod +x gradlew
 
 # run gradle
-script:
+# script:
  #- cd open.xtrace
- - ./gradlew build
+# - ./gradlew build
