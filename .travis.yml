@@ -3,6 +3,7 @@ language: java
 
 # temporary change permissions on gradle wrapper
 before_install:
+ - cd open.xtrace
  - chmod +x gradlew
 
 # run gradle
