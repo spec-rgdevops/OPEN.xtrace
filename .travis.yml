@@ -5,8 +5,12 @@ language: java
 before_install:
  - cd open.xtrace
  - chmod +x gradlew
+ - cd ..
+ - cd open.xtrace.adapters
+ - chmod +x gradlew
+ - cd ..
 
 # run gradle
-# script:
- #- cd open.xtrace
-# - ./gradlew build
+script:
+ - cd open.xtrace
+ - ./gradlew build
