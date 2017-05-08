@@ -16,8 +16,8 @@ import rocks.inspectit.shared.all.tracing.data.SpanIdent;
 
 class SpanConverterHelper {
 	
-	private static final String REQUEST = "http.request.";
-	private static final String RESPONSE = "http.response.";
+	private static final String REQUEST = "http.request";
+	private static final String RESPONSE = "http.response";
 	private static final String URL = "http.url";
 	private static final String OPERATIONNAME = "ext.operation.name";
 	
@@ -85,7 +85,11 @@ class SpanConverterHelper {
 					// Remote system was tracked
 					InvocationSequenceData remoteCall = getInvocationSequenceDataWithSpanID(childrenOfRemoteMeasurement.get(0).getSpanIdent().getId(), traceData.getInvocationSequenceDatas());
 					remoteInvocation = new IITRemoteInvocation(remoteCall, containingTrace, parent);
-					remoteInvocation.setTargetSubTrace(new IITSubTraceImpl(trace, remoteCall, getPlatformIdentWithID(remoteCall.getPlatformIdent(), traceData.getPlatformIdents())));	
+					if(remoteCall == null){
+						remoteInvocation.setTargetSubTrace(null);	
+					} else {
+						remoteInvocation.setTargetSubTrace(new IITSubTraceImpl(trace, remoteCall, getPlatformIdentWithID(remoteCall.getPlatformIdent(), traceData.getPlatformIdents())));	
+					}
 				}
 				
 				remoteInvocation.setRequestMeasurement(new IITMobileRemoteMeasurement(requestTimestamp, requestMeasurement));
