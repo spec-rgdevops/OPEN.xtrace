@@ -25,13 +25,12 @@ public class InvocationSequenceFileImporter implements TraceSource {
 	public void initialize(Properties properties, TraceSink traceSink) {
 		String dataPath = properties.getProperty(DATA_PATH);
 		if (dataPath == null) {
-			throw new IllegalArgumentException(
-					"Data path has not been specified for the inspectIT file importer trace source.");
+			throw new IllegalArgumentException("Data path has not been specified for the inspectIT file importer trace source.");
 		}
 		this.traceSink = traceSink;
 		try {
 			SerializerWrapper serializer = new SerializerWrapper();
-			InvocationSequences iSequences = serializer.readInvocationSequencesFromDir(dataPath);
+			InvocationSequences iSequences = serializer.readInvocationSequences(dataPath);
 			isDataIterator = iSequences.iterator();
 			pIdent = iSequences.getPlatformIdent();
 		} catch (IOException e) {

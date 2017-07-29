@@ -1,5 +1,6 @@
 package org.spec.research.open.xtrace.adapters.inspectit.source;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -20,6 +21,7 @@ public class InspectITTraceConverter implements TraceConverter {
 	private static final String DATA_PATH = "inspectit.fileimporter.datapath";
 	private static Iterator<InvocationSequenceData> isDataIterator = null;
 	private static PlatformIdent pIdent = null;
+
 	// TODO threshold been commented out. Adapter should not decide whether the
 	// trace is faulty in anyway, as the task of adapter is only to create
 	// OPEN.xtrace representation of the input traces. What are the traces used
@@ -29,7 +31,7 @@ public class InspectITTraceConverter implements TraceConverter {
 	private void readInvocations(final String path) {
 		try {
 			SerializerWrapper serializer = new SerializerWrapper();
-			InvocationSequences iSequences = serializer.readInvocationSequencesFromDir(path);
+			InvocationSequences iSequences = serializer.readInvocationSequences(path);
 			isDataIterator = iSequences.iterator();
 			pIdent = iSequences.getPlatformIdent();
 		} catch (IOException e) {
@@ -58,8 +60,7 @@ public class InspectITTraceConverter implements TraceConverter {
 	public void initialize(Properties properties) {
 		String dataPath = properties.getProperty(DATA_PATH);
 		if (dataPath == null) {
-			throw new IllegalArgumentException(
-					"Data path has not been specified for the inspectIT file importer trace source.");
+			throw new IllegalArgumentException("Data path has not been specified for the inspectIT file importer trace source.");
 		}
 		this.readInvocations(dataPath);
 
@@ -77,15 +78,15 @@ public class InspectITTraceConverter implements TraceConverter {
 	public List<Trace> convertTraces(final String path) {
 
 		if (path == null) {
-			throw new IllegalArgumentException(
-					"Data path has not been specified for the inspectIT file importer trace source.");
+			throw new IllegalArgumentException("Data path has not been specified for the inspectIT file importer trace source.");
+		}
+		if (!(new File(path)).exists()) {
+			throw new IllegalArgumentException("No file or directory found for the provided path.");
 		}
 
 		List<Trace> listConvertedTraces = new LinkedList<Trace>();
 
 		this.readInvocations(path);
-
-		// responseTimeThreshold = RESPONSETIME_THRESHOLD_DEFAULT;
 
 		Trace trace = getNextTrace();
 		if (trace != null) {
