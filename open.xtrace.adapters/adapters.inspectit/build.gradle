@@ -56,7 +56,7 @@ dependencies {
 	// compile files('libs/inspectit-commons.jar')
 	// compile files('libs/inspectit-commonscs.jar')
 	// compile files('libs/info.novatec.inspectit.rcp_1.5.0.jar')
-	compile files('libs/inspectit.shared.all_1.7.5.88.jar')
+	compile files('libs/rocks.inspectit.shared.all_1.7.7.90.jar')
 	
 	compile project(':shared') 
 }

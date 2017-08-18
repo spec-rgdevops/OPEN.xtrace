@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Properties;
 
 import org.diagnoseit.spike.inspectit.trace.impl.IITTraceImpl;
@@ -39,28 +38,31 @@ public class InspectITTraceConverter implements TraceConverter {
 		}
 	}
 
-	private Trace getNextTrace() {
-		if (!isDataIterator.hasNext()) {
-			throw new NoSuchElementException("Iterator reached the end!");
-		}
-		InvocationSequenceData isd = null;
-
-		// do {
-		isd = isDataIterator.next();
-		// } while (isDataIterator.hasNext() && isd.getDuration() <
-		// responseTimeThreshold);
-
-		if (isd != null) {
-			return (new IITTraceImpl(isd, pIdent));
-		}
-		throw new NoSuchElementException("Iterator reached the end!");
-	}
+	/*
+	 * Not needed anymore. Code moved to convertTraces(String)
+	 * (non-Javadoc)
+	 */
+	// private Trace getNextTrace() {
+	// if (!isDataIterator.hasNext()) {
+	// throw new NoSuchElementException("Iterator reached the end!");
+	// }
+	// InvocationSequenceData isd = null;
+	// do {
+	// isd = isDataIterator.next();
+	// } while (isDataIterator.hasNext() && isd.getDuration() <
+	// responseTimeThreshold);
+	// if (isd != null) {
+	// return (new IITTraceImpl(isd, pIdent));
+	// }
+	// throw new NoSuchElementException("Iterator reached the end!");
+	// }
 
 	@Override
 	public void initialize(Properties properties) {
 		String dataPath = properties.getProperty(DATA_PATH);
 		if (dataPath == null) {
-			throw new IllegalArgumentException("Data path has not been specified for the inspectIT file importer trace source.");
+			throw new IllegalArgumentException(
+					"Data path has not been specified for the inspectIT file importer trace source.");
 		}
 		this.readInvocations(dataPath);
 
@@ -78,7 +80,8 @@ public class InspectITTraceConverter implements TraceConverter {
 	public List<Trace> convertTraces(final String path) {
 
 		if (path == null) {
-			throw new IllegalArgumentException("Data path has not been specified for the inspectIT file importer trace source.");
+			throw new IllegalArgumentException(
+					"Data path has not been specified for the inspectIT file importer trace source.");
 		}
 		if (!(new File(path)).exists()) {
 			throw new IllegalArgumentException("No file or directory found for the provided path.");
@@ -88,11 +91,9 @@ public class InspectITTraceConverter implements TraceConverter {
 
 		this.readInvocations(path);
 
-		Trace trace = getNextTrace();
-		if (trace != null) {
-			listConvertedTraces.add(trace);
+		while (isDataIterator.hasNext()) {
+			listConvertedTraces.add(new IITTraceImpl(isDataIterator.next(), pIdent));
 		}
-
 		return listConvertedTraces;
 	}
 

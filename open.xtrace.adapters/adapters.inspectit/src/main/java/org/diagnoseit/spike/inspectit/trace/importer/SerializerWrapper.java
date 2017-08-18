@@ -1,7 +1,5 @@
 package org.diagnoseit.spike.inspectit.trace.importer;
 
-import info.novatec.inspectit.storage.serializer.schema.SchemaManagerTestProvider;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -9,18 +7,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import com.esotericsoftware.kryo.io.Input;
+
+import info.novatec.inspectit.storage.serializer.schema.SchemaManagerTestProvider;
 import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.serializer.SerializationException;
 import rocks.inspectit.shared.all.serializer.impl.SerializationManager;
 import rocks.inspectit.shared.all.serializer.schema.ClassSchemaManager;
 import rocks.inspectit.shared.all.util.KryoNetNetwork;
-
-import com.esotericsoftware.kryo.io.Input;
 
 public class SerializerWrapper extends SerializationManager {
 
@@ -86,12 +87,17 @@ public class SerializerWrapper extends SerializationManager {
 		InvocationSequences result = new InvocationSequences();
 
 		for (File file : dir.listFiles()) {
-			if (!file.isFile() || !this.isAllowedFile(file.getName())) {
+			if(this.isAllowedDatasource(file.getName())) {
+				List<InvocationSequenceData> fromOneDir = readInvocationSequences(file.getAbsolutePath()).getInvocationSequences();
+				for (InvocationSequenceData invocationSequenceData : fromOneDir) {
+					result.addInvocationSequence(invocationSequenceData);
+				}
+			} else if (!file.isFile() || !this.isAllowedFile(file.getName())) {
 				continue;
+			} else {
+				byte[] bytes = this.getBytesOfStreamWithGZip(Files.newInputStream(file.toPath()));
+				this.storeInvocationSequenceInput(result, bytes);
 			}
-
-			byte[] bytes = this.getBytesOfStreamWithGZip(Files.newInputStream(file.toPath()));
-			this.storeInvocationSequenceInput(result, bytes);
 		}
 
 		return result;
@@ -138,6 +144,15 @@ public class SerializerWrapper extends SerializationManager {
 	 */
 	private boolean isAllowedFile(final String name) {
 		return (name.endsWith(".itdata") || name.endsWith(".agent"));
+	}
+
+	/**
+	 * Check if it is a ".itds" file.
+	 * @param name File name
+	 * @return true if it is itds file, false if not
+	 */
+	private boolean isAllowedDatasource(final String name) {
+		return name.endsWith(".itds");
 	}
 
 	/**
